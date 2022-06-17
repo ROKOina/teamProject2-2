@@ -1,0 +1,65 @@
+﻿  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\DebugPS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\DebugPS.cso
+  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\DebugVS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\DebugVS.cso
+  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\ImGuiPS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\ImGuiPS.cso
+  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\ImGuiVS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\ImGuiVS.cso
+  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\LambertPS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\LambertPS.cso
+  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\LambertVS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\LambertVS.cso
+  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\LinePS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\LinePS.cso
+  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\LineVS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\LineVS.cso
+  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\SpritePS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\SpritePS.cso
+  compilation code save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\SpriteVS.cod
+  compilation object save succeeded; see C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Shader\SpriteVS.cso
+  WICTextureLoader.cpp
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_widgets.cpp
+  Audio.cpp
+  AudioResource.cpp
+  AudioSource.cpp
+  Camera.cpp
+  CameraController.cpp
+  Character.cpp
+  Collision.cpp
+  Effect.cpp
+  EffectManager.cpp
+  Enemy.cpp
+  EnemyManager.cpp
+  EnemySlime.cpp
+  Framework.cpp
+  DebugRenderer.cpp
+  Graphics.cpp
+  ImGuiRenderer.cpp
+  LambertShader.cpp
+C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Source\Character.cpp(313,44): warning C4305: '初期化中': 'double' から 'const float' へ切り詰めます。
+  LineRenderer.cpp
+  Model.cpp
+  ModelResource.cpp
+  Sprite.cpp
+  GamePad.cpp
+  Input.cpp
+  Mouse.cpp
+  Logger.cpp
+  Main.cpp
+  Player.cpp
+  Projectile.cpp
+  ProjectileHoming.cpp
+  ProjectileManager.cpp
+  ProjectileSraite.cpp
+  SceneGame.cpp
+  SceneLoading.cpp
+  SceneManager.cpp
+  SceneTitle.cpp
+  Stage.cpp
+C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\Source\SceneGame.cpp(275,72): warning C4244: '引数': 'int' から 'float' への変換です。データが失われる可能性があります。
+     ライブラリ bin\x64\Debug\Game.lib とオブジェクト bin\x64\Debug\Game.exp を作成中
+  Game.vcxproj -> C:\Users\2210080\Documents\授業関連\2年\チーム制作\前期第2回（ワンボタン）\プログラム\bin\x64\Debug\Game.exe
