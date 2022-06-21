@@ -20,6 +20,7 @@ void SceneLoading::Finalize()
     if (thread != nullptr)
     {
         thread->detach();
+        delete thread;
         thread = nullptr;
     }
 

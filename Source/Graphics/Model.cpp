@@ -42,7 +42,7 @@ void Model::UpdateTransform(const DirectX::XMFLOAT4X4& transform)
 	for (Node& node : nodes)
 	{
 		// ローカル行列算出
-		DirectX::XMMATRIX S = DirectX::XMMatrixScaling(node.scale.x, node.scale.y, node.scale.z);
+		DirectX::XMMATRIX S = DirectX::XMMatrixScaling(node.scale.x, node.scale.y , node.scale.z);
 		DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&node.rotate));
 		DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(node.translate.x, node.translate.y, node.translate.z);
 		DirectX::XMMATRIX LocalTransform = S * R * T;
@@ -63,4 +63,19 @@ void Model::UpdateTransform(const DirectX::XMFLOAT4X4& transform)
 		DirectX::XMStoreFloat4x4(&node.localTransform, LocalTransform);
 		DirectX::XMStoreFloat4x4(&node.worldTransform, WorldTransform);
 	}
+}
+
+//ノード名前検索
+bool Model::nodeSearch(const char* nodeName, Node* nodeRe)
+{
+	for (Node& node : nodes)	//ノードを検索
+	{
+		if (strcmp(node.name, nodeName)==0)	//同じ名前を取得
+		{
+			*nodeRe = node;
+
+			return true;
+		}
+	}
+	return false;
 }

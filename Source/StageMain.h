@@ -17,6 +17,8 @@ public:
     //描画処理
     void Render(ID3D11DeviceContext* dc, Shader* shader);
 
+    void UpdateTransform();
+
     //レイキャスト
     bool RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit);
 
@@ -25,4 +27,6 @@ public:
 
 private:
     Model* model = nullptr;
+
+
 };

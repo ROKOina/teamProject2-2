@@ -1,5 +1,5 @@
 #include "Character.h"
-#include "Stage.h"
+#include "StageMain.h"
 #include <imgui.h>
 #include "Logger.h"
 //行列更新処理
@@ -9,10 +9,6 @@ void Character::UpdateTransform()
     DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
     //回転行列を作成
     DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
-    //DirectX::XMMATRIX X = DirectX::XMMatrixRotationX(angle.x);
-    //DirectX::XMMATRIX Y = DirectX::XMMatrixRotationX(angle.y);
-    //DirectX::XMMATRIX Z = DirectX::XMMatrixRotationX(angle.z);
-    //DirectX::XMMATRIX R = X * Y * Z;
     
     //位置行列を作成
     DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
@@ -63,9 +59,9 @@ void Character::UpdateVelocity(float elapsedTime)
 {
     //経過フレーム
     float elapsedFrame = 60.0f * elapsedTime;
-    int a = 1;
+
     //垂直速力更新処理
-    
+    UpdateVertialVelocity(elapsedFrame);
 
     //水平速力更新処理
     UpdateHorizontalVelocity(elapsedFrame);
@@ -169,165 +165,165 @@ void Character::UpdateHorizontalVelocity(float elapsedFrame)
 //垂直移動更新処理
 void Character::UpdateVertialMove(float elapsedTime)
 {
-    ////移動処理
-    //position.y += velocity.y * elapsedTime;
+    //移動処理
+    position.y += velocity.y * elapsedTime;
 
-    ////地面判定
-    //if (position.y < 0.0f)
-    //{
-    //    position.y = 0.0f;
-    //    velocity.y = 0.0f;
+    //地面判定
+    if (position.y < 0.0f)
+    {
+        position.y = 0.0f;
+        velocity.y = 0.0f;
 
-    //    //着地した
-    //    if (!IsGround())
-    //    {
-    //        OnLoadding();
-    //        isGround = true;
-    //    }
-    //}
-    //else
-    //{
-    //    isGround = false;
-    //}
+        //着地した
+        if (!IsGround())
+        {
+            OnLanding();
+            isGround = true;
+        }
+    }
+    else
+    {
+        isGround = false;
+    }
 
     //垂直方向の移動量
     float my = velocity.y * elapsedTime;
 
-    //キャラクターのY軸方向となる法線ベクトル
-    DirectX::XMFLOAT3 normal = { 0,1,0 };
+    ////キャラクターのY軸方向となる法線ベクトル
+    //DirectX::XMFLOAT3 normal = { 0,1,0 };
 
-    slopeRate = 0.0f;   //坂道がたがた用
+    //slopeRate = 0.0f;   //坂道がたがた用
 
-    //落下中
-    if (my < 0.0f)
-    {
-        //レイの開始位置は足元より少し上
-        DirectX::XMFLOAT3 start = { position.x,position.y + stepOffset,position.z };
-        //レイの終点位置は移動後の位置
-        DirectX::XMFLOAT3 end = { position.x,position.y + my,position.z };
+    ////落下中
+    //if (my < 0.0f)
+    //{
+    //    //レイの開始位置は足元より少し上
+    //    DirectX::XMFLOAT3 start = { position.x,position.y + stepOffset,position.z };
+    //    //レイの終点位置は移動後の位置
+    //    DirectX::XMFLOAT3 end = { position.x,position.y + my,position.z };
 
-        //レイキャストによる地面判定
-        HitResult hit;
-        if (Stage::Instance().RayCast(start, end, hit))
-        {
-            //法線ベクトル取得
+    //    //レイキャストによる地面判定
+    //    HitResult hit;
+    //    if (Stage::Instance().RayCast(start, end, hit))
+    //    {
+    //        //法線ベクトル取得
 
-            //地面に接地している
-            position.y = hit.position.y;
+    //        //地面に接地している
+    //        position.y = hit.position.y;
 
-            //傾斜率の計算( 高さ/(底辺+高さ) )高さはhit.distance
+    //        //傾斜率の計算( 高さ/(底辺+高さ) )高さはhit.distance
 
-            float syahen = hit.normal.x * hit.normal.x + hit.normal.y * hit.normal.y + hit.normal.z * hit.normal.z;
-            float bottom = syahen / 5 * 4;
-            float height = syahen / 5 * 3;
-            slopeRate = height / (bottom + height);
+    //        float syahen = hit.normal.x * hit.normal.x + hit.normal.y * hit.normal.y + hit.normal.z * hit.normal.z;
+    //        float bottom = syahen / 5 * 4;
+    //        float height = syahen / 5 * 3;
+    //        slopeRate = height / (bottom + height);
 
-            //着地した
-            if (!isGround)
-            {
-                OnLanding();
-            }
-            isGround = true;
-            velocity.y = 0.0f;
-        }
-        else
-        {
-            //空中に浮いている
-            position.y += my;
-            isGround = false;
-        }
-    }
-    //上昇中
-    else if (my > 0.0f)
-    {
-        position.y += my;
-        isGround = false;
-    }
+    //        //着地した
+    //        if (!isGround)
+    //        {
+    //            OnLanding();
+    //        }
+    //        isGround = true;
+    //        velocity.y = 0.0f;
+    //    }
+    //    else
+    //    {
+    //        //空中に浮いている
+    //        position.y += my;
+    //        isGround = false;
+    //    }
+    //}
+    ////上昇中
+    //else if (my > 0.0f)
+    //{
+    //    position.y += my;
+    //    isGround = false;
+    //}
 }
 
 //水平移動更新処理
 void Character::UpdateHorizontalMove(float elapsedTime)
 {
-    ////移動処理
-    //position.x += velocity.x * elapsedTime;
-    //position.z += velocity.z * elapsedTime;
+    //移動処理
+    position.x += velocity.x * elapsedTime;
+    position.z += velocity.z * elapsedTime;
    
-    //水平速力量計算
-    float velocityLengthXZ = fabsf(velocity.x) + fabsf(velocity.z);
-    if (velocityLengthXZ > 0.0f)
-    {
-        //水平移動量
-        float mx = velocity.x * elapsedTime;
-        float mz = velocity.z * elapsedTime;
+    ////水平速力量計算
+    //float velocityLengthXZ = fabsf(velocity.x) + fabsf(velocity.z);
+    //if (velocityLengthXZ > 0.0f)
+    //{
+    //    //水平移動量
+    //    float mx = velocity.x * elapsedTime;
+    //    float mz = velocity.z * elapsedTime;
 
-        //レイの開始位置と終点位置
-        DirectX::XMFLOAT3 start = { position.x ,position.y + stepOffset ,position.z };
-        
-        DirectX::XMVECTOR Start = DirectX::XMLoadFloat3(&start);
-        DirectX::XMVECTOR StartC = DirectX::XMVectorScale(DirectX::XMVector3Normalize(Start), this->radius);
-        Start = DirectX::XMVectorAdd(Start, StartC);
-        DirectX::XMStoreFloat3(&start, Start);
+    //    //レイの開始位置と終点位置
+    //    DirectX::XMFLOAT3 start = { position.x ,position.y + stepOffset ,position.z };
+    //    
+    //    DirectX::XMVECTOR Start = DirectX::XMLoadFloat3(&start);
+    //    DirectX::XMVECTOR StartC = DirectX::XMVectorScale(DirectX::XMVector3Normalize(Start), this->radius);
+    //    Start = DirectX::XMVectorAdd(Start, StartC);
+    //    DirectX::XMStoreFloat3(&start, Start);
 
-        DirectX::XMFLOAT3 end = { start.x + mx ,start.y ,start.z + mz };
+    //    DirectX::XMFLOAT3 end = { start.x + mx ,start.y ,start.z + mz };
 
-        //レイキャストによる壁判定
-        HitResult hit;
-        if (Stage::Instance().RayCast(start, end, hit))
-        {
-            //壁までのベクトル
-            DirectX::XMVECTOR StartHit = DirectX::XMLoadFloat3(&hit.position);
-            DirectX::XMVECTOR End = DirectX::XMLoadFloat3(&end);
-            DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(StartHit, End);
+    //    //レイキャストによる壁判定
+    //    HitResult hit;
+    //    if (Stage::Instance().RayCast(start, end, hit))
+    //    {
+    //        //壁までのベクトル
+    //        DirectX::XMVECTOR StartHit = DirectX::XMLoadFloat3(&hit.position);
+    //        DirectX::XMVECTOR End = DirectX::XMLoadFloat3(&end);
+    //        DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(StartHit, End);
 
-            //壁の法線
-            DirectX::XMVECTOR Normal = DirectX::XMLoadFloat3(&hit.normal);
-            DirectX::XMFLOAT3 normal;
-            DirectX::XMStoreFloat3(&normal, Normal);
+    //        //壁の法線
+    //        DirectX::XMVECTOR Normal = DirectX::XMLoadFloat3(&hit.normal);
+    //        DirectX::XMFLOAT3 normal;
+    //        DirectX::XMStoreFloat3(&normal, Normal);
 
-            //Logger::Print("x:%.2f y:%.2f z:%.2f\n", normal.x, normal.y, normal.z);
+    //        //Logger::Print("x:%.2f y:%.2f z:%.2f\n", normal.x, normal.y, normal.z);
 
-            //入射ベクトルを法線に射影
-            DirectX::XMVECTOR Dot = DirectX::XMVector3Dot(Normal, Vec);
+    //        //入射ベクトルを法線に射影
+    //        DirectX::XMVECTOR Dot = DirectX::XMVector3Dot(Normal, Vec);
 
-            //補正後の計算
-            DirectX::XMVECTOR ND = DirectX::XMVectorScale(Normal, DirectX::XMVectorGetX(Dot));
-            DirectX::XMVECTOR EndWall = DirectX::XMVectorScale(Normal, DirectX::XMVectorGetX(Dot)*1.2f);
+    //        //補正後の計算
+    //        DirectX::XMVECTOR ND = DirectX::XMVectorScale(Normal, DirectX::XMVectorGetX(Dot));
+    //        DirectX::XMVECTOR EndWall = DirectX::XMVectorScale(Normal, DirectX::XMVectorGetX(Dot)*1.2f);
 
-            //補正後に物体があった場合止まる
-            DirectX::XMStoreFloat3(&start, Start);
-            DirectX::XMStoreFloat3(&end, EndWall);
-            start.y += stepOffset * 5;
-            end.y += stepOffset * 5;
-            if (Stage::Instance().RayCast(start, end, hit))return;  //物体があった場合return
+    //        //補正後に物体があった場合止まる
+    //        DirectX::XMStoreFloat3(&start, Start);
+    //        DirectX::XMStoreFloat3(&end, EndWall);
+    //        start.y += stepOffset * 5;
+    //        end.y += stepOffset * 5;
+    //        if (Stage::Instance().RayCast(start, end, hit))return;  //物体があった場合return
 
-            DirectX::XMVECTOR VecRay = DirectX::XMVectorSubtract(End, Start);
-            DirectX::XMVECTOR R = DirectX::XMVectorAdd(VecRay, ND); //壁ずりべくとる取得
-
-
-
-            //壁ずり移動
-            position.x += DirectX::XMVectorGetX(R);
-            position.z += DirectX::XMVectorGetZ(R);
-
-            //コンパイル時定数(https://www.slideshare.net/GenyaMurakami/constexpr-10458089
-            constexpr float epsilon = 0.001;
-
-            position.x += normal.x * epsilon;
-            position.z += normal.z * epsilon;
+    //        DirectX::XMVECTOR VecRay = DirectX::XMVectorSubtract(End, Start);
+    //        DirectX::XMVECTOR R = DirectX::XMVectorAdd(VecRay, ND); //壁ずりべくとる取得
 
 
-            //DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
-            //Pos = DirectX::XMVectorAdd(Pos,R);
-            //DirectX::XMStoreFloat3(&position, Pos);
 
-        }
-        else
-        {
-            //移動
-            position.x += mx;
-            position.z += mz;
-        }
-    }
+    //        //壁ずり移動
+    //        position.x += DirectX::XMVectorGetX(R);
+    //        position.z += DirectX::XMVectorGetZ(R);
+
+    //        //コンパイル時定数(https://www.slideshare.net/GenyaMurakami/constexpr-10458089
+    //        constexpr float epsilon = 0.001;
+
+    //        position.x += normal.x * epsilon;
+    //        position.z += normal.z * epsilon;
+
+
+    //        //DirectX::XMVECTOR Pos = DirectX::XMLoadFloat3(&position);
+    //        //Pos = DirectX::XMVectorAdd(Pos,R);
+    //        //DirectX::XMStoreFloat3(&position, Pos);
+
+    //    }
+    //    else
+    //    {
+    //        //移動
+    //        position.x += mx;
+    //        position.z += mz;
+    //    }
+    //}
 }
 
 //旋回処理

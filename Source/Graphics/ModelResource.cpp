@@ -285,6 +285,7 @@ void ModelResource::BuildModel(ID3D11Device* device, const char* dirname)
 		}
 
 		// 頂点バッファ
+		if(mesh.vertices.size()>0)
 		{
 			D3D11_BUFFER_DESC bufferDesc = {};
 			D3D11_SUBRESOURCE_DATA subresourceData = {};
@@ -305,6 +306,7 @@ void ModelResource::BuildModel(ID3D11Device* device, const char* dirname)
 		}
 
 		// インデックスバッファ
+		if(mesh.indices.size() >0)
 		{
 			D3D11_BUFFER_DESC bufferDesc = {};
 			D3D11_SUBRESOURCE_DATA subresourceData = {};

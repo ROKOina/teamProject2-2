@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Stage.h"
+#include "StageMain.h"
 #include "Player.h"
 #include "CameraController.h"
 #include "Scene.h"

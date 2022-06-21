@@ -35,6 +35,9 @@ public:
 	// リソース取得
 	const ModelResource* GetResource() const { return resource.get(); }
 
+	//ノード名前検索
+	bool nodeSearch(const char* nodeName,Node* nodeRe);
+
 private:
 	std::shared_ptr<ModelResource>	resource;
 	std::vector<Node>				nodes;
