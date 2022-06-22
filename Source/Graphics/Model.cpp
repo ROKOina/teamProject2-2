@@ -22,6 +22,7 @@ Model::Model(const char* filename)
 		dst.scale = src.scale;
 		dst.rotate = src.rotate;
 		dst.translate = src.translate;
+		dst.Index = nodeIndex;
 
 		if (dst.parent != nullptr)
 		{
@@ -66,11 +67,12 @@ void Model::UpdateTransform(const DirectX::XMFLOAT4X4& transform)
 }
 
 //ノード名前検索
-bool Model::nodeSearch(const char* nodeName, Node* nodeRe)
+bool Model::nodeSearch(const char* nodeName, Model::Node* nodeRe)
+//bool Model::nodeSearch(const char* nodeName, Stage::NodeI* nodeRe)
 {
-	for (Node& node : nodes)	//ノードを検索
+	for (Node node : nodes)	//ノードを検索
 	{
-		if (strcmp(node.name, nodeName)==0)	//同じ名前を取得
+		if (strcmp(node.name, nodeName) == 0)	//同じ名前を取得
 		{
 			*nodeRe = node;
 
@@ -79,3 +81,4 @@ bool Model::nodeSearch(const char* nodeName, Node* nodeRe)
 	}
 	return false;
 }
+

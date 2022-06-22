@@ -72,7 +72,6 @@ void ProjectileManager::Clear()
     {
         delete projectile;
     }
-
 }
 
 //’eŠÛíœ

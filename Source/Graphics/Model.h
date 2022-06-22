@@ -23,6 +23,8 @@ public:
 		DirectX::XMFLOAT4X4	worldTransform;
 
 		std::vector<Node*>	children;
+
+		int Index;
 	};
 
 	// 行列計算
@@ -36,7 +38,7 @@ public:
 	const ModelResource* GetResource() const { return resource.get(); }
 
 	//ノード名前検索
-	bool nodeSearch(const char* nodeName,Node* nodeRe);
+	bool nodeSearch(const char* nodeName,Model::Node* nodeRe);
 
 private:
 	std::shared_ptr<ModelResource>	resource;

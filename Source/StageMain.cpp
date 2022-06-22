@@ -1,6 +1,7 @@
 #include "StageMain.h"
 
 static Stage* instance = nullptr;
+Model::Node Barel;
 
 DirectX::XMFLOAT4X4 transform = {
 1, 0, 0, 0,
@@ -9,13 +10,12 @@ DirectX::XMFLOAT4X4 transform = {
 0, 0, 0, 1
 };
 
-
 //インスタンス取得
 Stage& Stage::Instance()
 {
     return *instance;
 }
-Model::Node Barel;
+
 //コンストラクタ
 Stage::Stage()
 {
@@ -39,7 +39,7 @@ Stage::~Stage()
 void Stage::UpdateTransform()
 {
     //スケール行列を作成
-    DirectX::XMMATRIX S = DirectX::XMMatrixScaling(0.01f, 0.01f, 0.01f);
+    DirectX::XMMATRIX S = DirectX::XMMatrixScaling(1.0f, 1.0f, 1.0f);
     //回転行列を作成
     DirectX::XMMATRIX R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&model->GetNodes().at(0).rotate));
     //位置行列を作成
@@ -50,11 +50,20 @@ void Stage::UpdateTransform()
     DirectX::XMStoreFloat4x4(&transform, W);
 }
 
+
+#include "Input/Input.h"
 //更新処理
 void Stage::Update(float elapsedTime)
 {
     //今はやることなし
-    //UpdateTransform();
+
+    GamePad& gamePad = Input::Instance().GetGamePad();
+
+    if (gamePad.GetButtonDown() & GamePad::BTN_A)
+    {
+        model->GetNodes()[Barel.Index].translate.z += 1;
+    }
+
     model->UpdateTransform(transform);
 }
 

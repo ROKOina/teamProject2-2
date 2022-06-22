@@ -19,6 +19,7 @@ public:
 
     void UpdateTransform();
 
+
     //レイキャスト
     bool RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit);
 
