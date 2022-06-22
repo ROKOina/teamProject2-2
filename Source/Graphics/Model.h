@@ -5,6 +5,11 @@
 #include <DirectXMath.h>
 #include "Graphics/ModelResource.h"
 
+//マップの大きさ（マップチップ）
+#define  MAP_X (13)
+#define  MAP_Z (7)
+#define  MAP_Y (2)
+
 // モデル
 class Model
 {
@@ -38,7 +43,9 @@ public:
 	const ModelResource* GetResource() const { return resource.get(); }
 
 	//ノード名前検索
-	bool nodeSearch(const char* nodeName,Model::Node* nodeRe);
+	bool nodeSearch(const char* nodeName, Model::Node nodeRe[MAP_Y][MAP_Z][MAP_X]);
+
+
 
 private:
 	std::shared_ptr<ModelResource>	resource;

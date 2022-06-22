@@ -12,7 +12,7 @@ void SceneGame::Initialize()
 {
 
 	//ステージ初期化
-	stage = new Stage();
+	stage = new StageMain();
 	//プレイヤー初期化
 	player = new Player();
 	//カメラコントローラー初期化
@@ -330,7 +330,7 @@ void SceneGame::RenderEnemyGauge(
 
 		//地形との当たり
 		HitResult hit;
-		if (Stage::Instance().RayCast(screenPositionS, screenPositionE, hit))
+		if (StageMain::Instance().RayCast(screenPositionS, screenPositionE, hit))
 		{
 			if (EnemyManager::Instance().enemyLeftClickSet) {
 				EnemySlime* enemy = new EnemySlime();

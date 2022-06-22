@@ -34,7 +34,7 @@ private:
 	);
 
 private:
-	Stage* stage = nullptr;
+	StageMain* stage = nullptr;
 	Player* player = nullptr;
 	CameraController* cameraController = nullptr;
 	Sprite* gauge = nullptr;

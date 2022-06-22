@@ -1,7 +1,6 @@
 #include "StageMain.h"
 
-static Stage* instance = nullptr;
-Model::Node Barel;
+static StageMain* instance = nullptr;
 
 DirectX::XMFLOAT4X4 transform = {
 1, 0, 0, 0,
@@ -11,13 +10,13 @@ DirectX::XMFLOAT4X4 transform = {
 };
 
 //インスタンス取得
-Stage& Stage::Instance()
+StageMain& StageMain::Instance()
 {
     return *instance;
 }
 
 //コンストラクタ
-Stage::Stage()
+StageMain::StageMain()
 {
     instance = this;
 
@@ -26,17 +25,17 @@ Stage::Stage()
     //model = new Model("Data/Model/Jammo/Jammo.mdl");
     model = new Model("Data/Model/blockMap1/map1.mdl");
     //model = new Model("Data/Model/blockMap/blockMap.mdl");
-
-    model->nodeSearch("Button_Platform_01_Red", &Barel);
+    
+    model->nodeSearch("Button_Platform_01_Red", map);   //mapにノードを入れる
 }
 
-Stage::~Stage()
+StageMain::~StageMain()
 {
     //ステージモデルを破棄
     delete model;
 }
 
-void Stage::UpdateTransform()
+void StageMain::UpdateTransform()
 {
     //スケール行列を作成
     DirectX::XMMATRIX S = DirectX::XMMatrixScaling(1.0f, 1.0f, 1.0f);
@@ -53,29 +52,30 @@ void Stage::UpdateTransform()
 
 #include "Input/Input.h"
 //更新処理
-void Stage::Update(float elapsedTime)
+void StageMain::Update(float elapsedTime)
 {
     //今はやることなし
 
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     if (gamePad.GetButtonDown() & GamePad::BTN_A)
-    {
-        model->GetNodes()[Barel.Index].translate.z += 1;
+    {   //かりうごかし
+        map[0][0][0].translate.x += 1;
+        model->GetNodes()[map[0][0][0].Index]= map[0][0][0];
     }
 
     model->UpdateTransform(transform);
 }
 
 //レイキャスト
-bool Stage::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)
+bool StageMain::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit)
 {
     return Collision::IntersectRayVsModel(start, end, model, hit);
 }
 
 
 //描画処理
-void Stage::Render(ID3D11DeviceContext* dc, Shader* shader)
+void StageMain::Render(ID3D11DeviceContext* dc, Shader* shader)
 {
     //シェーダーにモデルを描画してもらう
     shader->Draw(dc, model);
