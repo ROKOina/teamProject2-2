@@ -53,5 +53,12 @@ public:
         const Model* model,
         HitResult& result
     );
+
+    //ŽlŠp‚ÆŠÛ‚Ì“–‚½‚è”»’è(2ziku)
+    static bool IntersectRectSphere(
+        const DirectX::XMFLOAT3& playerPos, const float playerRadius, 
+        const DirectX::XMFLOAT3& mapPos,
+        DirectX::XMFLOAT3& outPos
+    );
 };
 

@@ -26,7 +26,7 @@ StageMain::StageMain()
     model = new Model("Data/Model/blockMap1/map1.mdl");
     //model = new Model("Data/Model/blockMap/blockMap.mdl");
     
-    model->nodeSearch("Button_Platform_01_Red", map);   //mapにノードを入れる
+    model->nodeSearch("Button_Platform_01_Red", map);   //mapにノードを入れる(char型の引数使わない)
 }
 
 StageMain::~StageMain()
@@ -54,8 +54,6 @@ void StageMain::UpdateTransform()
 //更新処理
 void StageMain::Update(float elapsedTime)
 {
-    //今はやることなし
-
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     if (gamePad.GetButtonDown() & GamePad::BTN_A)

@@ -7,6 +7,7 @@
 #include "Collision.h"
 #include "ProjectileStraite.h"
 #include "ProjectileHoming.h"
+#include "StageMain.h"
 
 //コンストラクタ
 Player::Player()
@@ -15,6 +16,8 @@ Player::Player()
 
     //モデルが大きいのでスケーリング
     scale.x = scale.y = scale.z = 0.01f;
+
+    this->radius = 0.3f;
 
     //ヒットエフェクト読み込み
     hitEffect = new Effect("Data/Effect/Hit.efk");
@@ -80,6 +83,8 @@ DirectX::XMFLOAT3 Player::GetMoveVec() const
 //更新処理
 void Player::Update(float elapsedTime)
 {
+    DirectX::XMFLOAT3 oldPlayerPos = this->GetPosition();
+
     //移動入力処理
     InputMove(elapsedTime);
 
@@ -100,6 +105,9 @@ void Player::Update(float elapsedTime)
 
     //弾丸と敵の衝突判定
     CollisionProjectileVsEnemies();
+
+    //プレイヤーとstageの当たり判定
+    CollisionStage(oldPlayerPos);
 
     //オブジェクトの行列を更新
     UpdateTransform();
@@ -383,6 +391,39 @@ void Player::CollisionProjectileVsEnemies()
             }
         }
     }
+}
+
+//プレイヤーとstageの当たり判定
+void Player::CollisionStage(DirectX::XMFLOAT3 oldPlayerPos)
+{
+    int mapLeft = (MAP_X - 1) / 2;  //ステージ半分の値
+    int mapForward = (MAP_Z - 1) / 2;
+
+    //ステージ範囲内
+    for (int z = 0; z < MAP_Z; ++z) //平面で回す
+    {
+        for (int x = 0; x < MAP_X; ++x)
+        {
+            if (StageMain::Instance().map[0][z][x].name)continue;   //noneブロックを探す
+
+            DirectX::XMFLOAT3 outPosition;
+            outPosition = oldPlayerPos; //１フレーム分前のpositionを代入
+
+            int xp = x - mapLeft;
+            int zp = z - mapForward;
+
+            if (Collision::IntersectRectSphere(this->GetPosition(), this->GetRadius(),{ (float)xp,0,(float)zp }, outPosition))//当たり判定
+            {
+                this->SetPosition(outPosition); 
+            }
+        }
+    }
+
+    //ステージ範囲外
+    if (this->GetPosition().x > mapLeft)this->SetPosition({ (float)mapLeft ,this->GetPosition().y,this->GetPosition().z });
+    if (this->GetPosition().x < -mapLeft)this->SetPosition({ (float)-mapLeft ,this->GetPosition().y,this->GetPosition().z });
+    if (this->GetPosition().z > mapForward)this->SetPosition({ this->GetPosition().x ,this->GetPosition().y,(float)mapForward });
+    if (this->GetPosition().z < -mapForward)this->SetPosition({ this->GetPosition().x ,this->GetPosition().y,(float)-mapForward });
 }
 
 //描画更新

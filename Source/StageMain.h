@@ -27,18 +27,17 @@ public:
 
     void UpdateTransform();
 
-
     //レイキャスト
     bool RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end, HitResult& hit);
 
     //インスタンス取得
     static StageMain& Instance();
 
+    //Y,Z,Xなので注意！！！！！！！
+    Model::Node map[MAP_Y][MAP_Z][MAP_X] = {};
 private:
     //vector<vector<Model::Node>> map[MAP_X][MAP_Y]; //マップチップ情報入れ物
     
-    //Y,Z,Xなので注意！！！！！！！
-    Model::Node map[MAP_Y][MAP_Z][MAP_X] = {};
     Model* model = nullptr;
 
 

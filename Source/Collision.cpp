@@ -1,5 +1,6 @@
 #include "Collision.h"
 #include <cmath>
+#include "Logger.h"
 
 //球と球の交差判定
 bool Collision::IntersectSphereVsSphere(
@@ -135,13 +136,16 @@ bool Collision::IntersectSphereVsCylider(
 
     DirectX::XMVECTOR PositionA = DirectX::XMLoadFloat3(&spherePosition);
     DirectX::XMVECTOR PositionB = DirectX::XMLoadFloat3(&cylinderPosition);
-    DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(PositionB, PositionA);  //引き算で方向を求めるa->b
+    DirectX::XMVECTOR Vec = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(PositionB, PositionA));  //引き算で方向を求めるa->b
                                                                               //DirectX::XMVECTOR LengthSq = DirectX::XMVector3LengthSq(Vec);  //sq = スクエア(平方根)    2乗していると考えて良い
     DirectX::XMVECTOR LengthSq = DirectX::XMVector3LengthSq(Vec);  //sq = スクエア(平方根)    2乗していると考えて良い
-    float lengthSq;
-    DirectX::XMStoreFloat(&lengthSq, LengthSq);
+    
+    
+    //float lengthSq;
+    //DirectX::XMStoreFloat(&lengthSq, LengthSq);
 
-    PositionB = DirectX::XMVectorAdd(PositionA, Vec);   //A->Bに押し出すので、
+    DirectX::XMVECTOR Le=DirectX::XMVectorScale(Vec, sphereRadius+ cylinderRadius);
+    PositionB = DirectX::XMVectorAdd(PositionA, Le);   //A->Bに押し出すので、
                                                         //ポジションAを足し、Vecを足す
     DirectX::XMStoreFloat3(&outCylinderPosition, PositionB);
 
@@ -305,4 +309,69 @@ bool Collision::IntersectRayVsModel(
     //    return true;
     //}
     return hit;
+}
+
+//四角と丸の当たり判定
+bool Collision::IntersectRectSphere(
+    const DirectX::XMFLOAT3& playerPos, const float playerRadius,
+    const DirectX::XMFLOAT3& mapPos,
+    DirectX::XMFLOAT3& outPos)
+{
+    float px = playerPos.x;
+    float pz = playerPos.z;
+    float mx = mapPos.x;
+    float mz = mapPos.z;
+
+    //円と四角の距離を求める
+    px -= mx;
+    pz -= mz;
+
+    float mapRadius=0.8f;
+    //判定
+    if (fabsf(px)  > mapRadius  || fabsf(pz) > mapRadius)return false;
+    
+
+
+    //押し戻しベクトル作成
+    DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&playerPos);
+    DirectX::XMVECTOR M = DirectX::XMLoadFloat3(&mapPos);
+
+    DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(P, M);    //プレイヤーに向かうベクトルを作成
+    //DirectX::XMVECTOR Lenght = DirectX::XMVector3Length(Vec);
+
+    Vec = DirectX::XMVector3Normalize(Vec);
+
+    //Vec = DirectX::XMVectorScale(Vec, DirectX::XMVectorGetX(Lenght)+0.09f);
+
+    //Vec = DirectX::XMVectorAdd(M, Vec);
+
+    //DirectX::XMStoreFloat3(&outPos, Vec);
+
+    DirectX::XMVECTOR S =DirectX::XMLoadFloat3
+    (&DirectX::XMFLOAT3{ mapRadius,0,mapRadius });   //四角の頂点の位置ベクトル
+    S = DirectX::XMVectorAdd(S, M);
+    DirectX::XMVECTOR MS = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(S, M));    //四角の斜め方向ベクトル
+
+    DirectX::XMVECTOR Dot = DirectX::XMVector3Dot(Vec, MS); //角度を見る
+    float dot = DirectX::XMVectorGetX(Dot);
+    if (dot == 0)return false;
+
+    DirectX::XMVECTOR Cross = DirectX::XMVector3Cross(MS, Vec); //外積で上か下か見る
+    if (DirectX::XMVectorGetY(Cross) == 0)return false;
+
+    if (DirectX::XMVectorGetY(Cross) < 0)   //結果により移動できる方向を絞る
+    {
+        if (dot > 0)outPos.x = playerPos.x;
+        else outPos.z = playerPos.z;
+    }
+    if (DirectX::XMVectorGetY(Cross) > 0)
+    {
+        if (dot < 0)outPos.x = playerPos.x;
+        else outPos.z = playerPos.z;
+    }
+
+    //Logger::Print("p%f\n", dot);
+    //Logger::Print("x%f,y%f,z%f", DirectX::XMVectorGetX(Cross),DirectX::XMVectorGetY(Cross),DirectX::XMVectorGetZ(Cross));
+
+    return true;
 }

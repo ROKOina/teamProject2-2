@@ -25,6 +25,9 @@ public: //関数
     //弾丸と敵の衝突処理
     void CollisionProjectileVsEnemies();
 
+    //プレイヤーとstageの当たり判定
+    void CollisionStage(DirectX::XMFLOAT3);
+
     //デバッグ用GUI描画
     void DrawDebugGUI();
 
