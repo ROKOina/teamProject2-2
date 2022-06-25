@@ -21,17 +21,17 @@ void SceneGame::Initialize()
 	//エネミー初期化
 	//EnemyManager::Instance().Register(new EnemySlime());
 
-	EnemyManager& enemyManager = EnemyManager::Instance();
+	//EnemyManager& enemyManager = EnemyManager::Instance();
 	//EnemySlime* slime = new EnemySlime();
 	//slime->SetPosition(DirectX::XMFLOAT3(0, 0, 5));
 	//enemyManager.Register(slime);
 
-	for (int i = 0; i < 2; ++i)	//当たり判定のためエネミー2体生成
-	{
-		EnemySlime* slime = new EnemySlime();
-		slime->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
-		enemyManager.Register(slime);
-	}
+	//for (int i = 0; i < 2; ++i)	//当たり判定のためエネミー2体生成
+	//{
+	//	EnemySlime* slime = new EnemySlime();
+	//	slime->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
+	//	enemyManager.Register(slime);
+	//}
 
 	//カメラ初期設定
 	Graphics& graphics = Graphics::Instance();
@@ -48,14 +48,12 @@ void SceneGame::Initialize()
 	);
 
 	//ゲージスプライト
-	gauge = new Sprite();
+	//gauge = new Sprite();
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
-	//エネミー終了化
-	EnemyManager::Instance().Clear();
 	//ステージ終了化
 	if (stage != nullptr)
 	{
@@ -74,12 +72,6 @@ void SceneGame::Finalize()
 		delete cameraController;
 		cameraController = nullptr;
 	}
-	//ゲージスプライト終了化
-	if (gauge != nullptr)
-	{
-		delete gauge;
-		gauge = nullptr;
-	}
 }
 
 // 更新処理
@@ -96,10 +88,6 @@ void SceneGame::Update(float elapsedTime)
 	stage->Update(elapsedTime);
 	//プレイヤー更新処理
 	player->Update(elapsedTime);
-	//エネミー更新処理
-	EnemyManager::Instance().Upadate(elapsedTime);
-	//エフェクト更新処理
-	EffectManager::Instance().Update(elapsedTime);
 }
 
 // 描画処理
@@ -156,8 +144,6 @@ void SceneGame::Render()
 		stage->Render(dc, shader);
 		//プレイヤー描画
 		player->Render(dc, shader);
-		//エネミー描画
-		EnemyManager::Instance().Render(dc, shader);
 
 		shader->End(dc);
 	}
@@ -173,8 +159,6 @@ void SceneGame::Render()
 			player->DrawDebugPrimitive();
 
 
-				//エネミーデバッグプリミティブ描画
-				EnemyManager::Instance().DrawDebugPrimitive();
 
 				// ラインレンダラ描画実行
 				graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
@@ -186,7 +170,6 @@ void SceneGame::Render()
 
 	// 2Dスプライト描画
 	{
-		RenderEnemyGauge(dc, rc.view, rc.projection);
 	}
 
 	// 2DデバッグGUI描画
@@ -212,9 +195,6 @@ void SceneGame::Render()
 			//カメラコントローラー
 			cameraController->DrawDebugGUI();
 
-			//エネミーマネージャー
-			EnemyManager& enemyManager = EnemyManager::Instance();
-			enemyManager.Instance().DrawDebugGUI();
 
 		}
 		ImGui::End();

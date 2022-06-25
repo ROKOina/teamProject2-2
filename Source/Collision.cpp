@@ -311,7 +311,7 @@ bool Collision::IntersectRayVsModel(
     return hit;
 }
 
-//四角と丸の当たり判定
+//stageとの当たり
 bool Collision::IntersectRectSphere(
     const DirectX::XMFLOAT3& playerPos, const float playerRadius,
     const DirectX::XMFLOAT3& mapPos,
@@ -326,15 +326,17 @@ bool Collision::IntersectRectSphere(
     px -= mx;
     pz -= mz;
 
-    float mapRadius=0.8f;
+    float mapRadius=1.0f;
     //判定
-    if (fabsf(px)  > mapRadius  || fabsf(pz) > mapRadius)return false;
+    if (fabsf(px)  > mapRadius || fabsf(pz)  > mapRadius )return false;
     
 
 
     //押し戻しベクトル作成
-    DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&playerPos);
-    DirectX::XMVECTOR M = DirectX::XMLoadFloat3(&mapPos);
+    DirectX::XMVECTOR P{ playerPos.x,0,playerPos.z };
+    DirectX::XMVECTOR M{ mapPos.x,0,mapPos.z };
+    //DirectX::XMVECTOR P = DirectX::XMLoadFloat3(&playerPos);
+    //DirectX::XMVECTOR M = DirectX::XMLoadFloat3(&mapPos);
 
     DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(P, M);    //プレイヤーに向かうベクトルを作成
     //DirectX::XMVECTOR Lenght = DirectX::XMVector3Length(Vec);
@@ -346,6 +348,16 @@ bool Collision::IntersectRectSphere(
     //Vec = DirectX::XMVectorAdd(M, Vec);
 
     //DirectX::XMStoreFloat3(&outPos, Vec);
+
+    //プレイヤーの移動ベクトルをみて判定を分ける
+    DirectX::XMVECTOR OldP = DirectX::XMLoadFloat3(&outPos);
+    DirectX::XMVECTOR VecMove = DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(OldP, P));     //プレイヤー移動方向ベクトル
+    DirectX::XMVECTOR Y{ 0,1,0 };
+    DirectX::XMVECTOR CRO = DirectX::XMVector3Cross(Vec, Y);    //プレイやーとブロックの法線を求める
+
+    CRO = DirectX::XMVector3Cross(CRO, VecMove);
+    if (DirectX::XMVectorGetY(CRO) < 0)return false;    //向きで方向を見る
+
 
     DirectX::XMVECTOR S =DirectX::XMLoadFloat3
     (&DirectX::XMFLOAT3{ mapRadius,0,mapRadius });   //四角の頂点の位置ベクトル

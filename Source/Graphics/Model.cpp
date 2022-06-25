@@ -67,7 +67,7 @@ void Model::UpdateTransform(const DirectX::XMFLOAT4X4& transform)
 }
 
 //ノード名前検索
-bool Model::nodeSearch(const char* nodeName, Model::Node map[MAP_Y][MAP_Z][MAP_X])
+bool Model::nodeSearch(const char* parentName, Model::Node map[MAP_Y][MAP_Z][MAP_X], std::vector<Node>* bottom)
 {
 	for (const Node node : nodes)	//ノードを検索
 	{
@@ -79,11 +79,21 @@ bool Model::nodeSearch(const char* nodeName, Model::Node map[MAP_Y][MAP_Z][MAP_X
 		int x = (int)node.translate.x + mapLeft;
 		int z = (int)node.translate.z - mapForward;
 
+		//座標のy<0を取得
+		if ((int)node.translate.y < 0 && strcmp(node.parent->name, parentName) == 0)
+		{
+			bottom->emplace_back(node);
+		}
+
 		//座標でmapに入れていく
-		if ((int)node.translate.y != 0)continue;	//とりあえず高さが0以外ははじく
+		if ((int)node.translate.y < 0|| (int)node.translate.y >= 2)continue;	//とりあえず高さが0以外ははじく
 		if (x < 0 && x > MAP_X && z > 0 && z < -MAP_Z)continue;	//範囲外ははじく
 
-		map[0][-z][x] = node;
+		//Parentを見る
+		if (!node.parent)continue;
+		if (strcmp(node.parent->name, parentName) != 0 )continue;
+
+		map[(int)node.translate.y][-z][x] = node;
 
 		//if (strcmp(node.name, nodeName) == 0)	//同じ名前を取得
 		//{
