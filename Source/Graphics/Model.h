@@ -43,7 +43,7 @@ public:
 	const ModelResource* GetResource() const { return resource.get(); }
 
 	//ÉmÅ[ÉhñºëOåüçı
-	bool nodeSearch(const char* nodeName, Model::Node nodeRe[MAP_Y][MAP_Z][MAP_X]);
+	bool nodeSearch(const char* parentName, Model::Node nodeRe[MAP_Y][MAP_Z][MAP_X], std::vector<Node>* bottom);
 
 
 

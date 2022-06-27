@@ -10,69 +10,34 @@
 // 初期化
 void SceneGame::Initialize()
 {
-	Graphics& graphics = Graphics::Instance();
 
-	//各種レンダラー生成
-	{
-		UINT width = static_cast<UINT>(graphics.GetScreenWidth());
-		UINT height = static_cast<UINT>(graphics.GetScreenHeight());
-
-		//シャドウマップレンダラー
-		shadowmapRenderer = std::make_unique<ShadowMapRenderer>(2048);
-		//シーンレンダラー
-		sceneRenderer = std::make_unique<SceneRenderer>(width,height);
-	}
 	//ステージ初期化
 	stage = new StageMain();
 	//プレイヤー初期化
 	player = new Player();
-
-	//モデルをレンダラーに登録
-	Model* list[] =
-	{
-		stage->GetModel(),
-		player->GetModel(),
-		
-	};
-	for(Model* model:list)
-	{
-		if (!model)
-			continue;
-		shadowmapRenderer->RegisterRenderModel(model);
-		sceneRenderer->RegisterRenderModel(model);
-	}
-	//平行光源を追加
-	{
-		Light* light = new Light(LightType::Directional);
-		light->SetDirection({ 0, -1, 1 });
-		LightManager::Instance().Register(light);
-
-		//シャドウマップ用の光源として指定する
-		LightManager::Instance().SetShadowmapLight(light);
-	}
 	//カメラコントローラー初期化
 	cameraController = new CameraController();
 
 	//エネミー初期化
 	//EnemyManager::Instance().Register(new EnemySlime());
 
-	EnemyManager& enemyManager = EnemyManager::Instance();
+	//EnemyManager& enemyManager = EnemyManager::Instance();
 	//EnemySlime* slime = new EnemySlime();
 	//slime->SetPosition(DirectX::XMFLOAT3(0, 0, 5));
 	//enemyManager.Register(slime);
 
-	for (int i = 0; i < 2; ++i)	//当たり判定のためエネミー2体生成
-	{
-		EnemySlime* slime = new EnemySlime();
-		slime->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
-		enemyManager.Register(slime);
-	}
+	//for (int i = 0; i < 2; ++i)	//当たり判定のためエネミー2体生成
+	//{
+	//	EnemySlime* slime = new EnemySlime();
+	//	slime->SetPosition(DirectX::XMFLOAT3(i * 2.0f, 0, 5));
+	//	enemyManager.Register(slime);
+	//}
 
 	//カメラ初期設定
-	
+	Graphics& graphics = Graphics::Instance();
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
-		DirectX::XMFLOAT3(2, 2, -10),
+		DirectX::XMFLOAT3(0, 10, -10),
 		DirectX::XMFLOAT3(0, 0, 0),
 		DirectX::XMFLOAT3(0, 1, 0)
 	);
@@ -83,14 +48,12 @@ void SceneGame::Initialize()
 	);
 
 	//ゲージスプライト
-	gauge = new Sprite();
+	//gauge = new Sprite();
 }
 
 // 終了化
 void SceneGame::Finalize()
 {
-	//エネミー終了化
-	EnemyManager::Instance().Clear();
 	//ステージ終了化
 	if (stage != nullptr)
 	{
@@ -109,12 +72,6 @@ void SceneGame::Finalize()
 		delete cameraController;
 		cameraController = nullptr;
 	}
-	//ゲージスプライト終了化
-	if (gauge != nullptr)
-	{
-		delete gauge;
-		gauge = nullptr;
-	}
 }
 
 // 更新処理
@@ -131,10 +88,6 @@ void SceneGame::Update(float elapsedTime)
 	stage->Update(elapsedTime);
 	//プレイヤー更新処理
 	player->Update(elapsedTime);
-	//エネミー更新処理
-	EnemyManager::Instance().Upadate(elapsedTime);
-	//エフェクト更新処理
-	EffectManager::Instance().Update(elapsedTime);
 }
 
 // 描画処理
@@ -153,7 +106,7 @@ void SceneGame::Render()
 
 	// 描画処理
 	RenderContext rc;	//描画するために必要な構造体
-	rc.directionalLightData.direction = { 0.0f, -1.0f, 0.0f, 0.0f };	// ライト方向（下方向）
+	rc.lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f };	// ライト方向（下方向）
 
 	//カメラパラメーター設定
 	Camera& camera = Camera::Instance();
@@ -184,25 +137,15 @@ void SceneGame::Render()
 
 	// 3Dモデル描画
 	{
-		//シャドウマップの描画
-		shadowmapRenderer->Render(dc);
+		Shader* shader = graphics.GetShader();
+		shader->Begin(dc,rc);	//シェーダーにカメラの情報を渡す
 
-		//シーンレンダラーにシャドウマップ情報を渡す
-		sceneRenderer->SetShadowmapData(shadowmapRenderer->GetShadowMapData());
-		//シーンの描画
-		sceneRenderer->Render(dc);
-		//ModelShader* shader = graphics.GetModelShader(ModelShaderId::Default);
-		//shader->Begin(dc,rc);	//シェーダーにカメラの情報を渡す
+		//ステージ描画
+		stage->Render(dc, shader);
+		//プレイヤー描画
+		player->Render(dc, shader);
 
-		////ステージ描画
-		//stage->Render(dc,rc, shader);
-		////プレイヤー描画
-		//player->Render(dc,rc, shader);
-		////エネミー描画
-		//EnemyManager::Instance().Render(dc, shader);
-
-		//shader->End(dc,rc);
-
+		shader->End(dc);
 	}
 
 	//3Dエフェクト描画
@@ -216,8 +159,6 @@ void SceneGame::Render()
 			player->DrawDebugPrimitive();
 
 
-				//エネミーデバッグプリミティブ描画
-				EnemyManager::Instance().DrawDebugPrimitive();
 
 				// ラインレンダラ描画実行
 				graphics.GetLineRenderer()->Render(dc, rc.view, rc.projection);
@@ -229,7 +170,6 @@ void SceneGame::Render()
 
 	// 2Dスプライト描画
 	{
-		RenderEnemyGauge(dc, rc.view, rc.projection);
 	}
 
 	// 2DデバッグGUI描画
@@ -255,17 +195,6 @@ void SceneGame::Render()
 			//カメラコントローラー
 			cameraController->DrawDebugGUI();
 
-			//ライトマネージャー
-			LightManager::Instance().DrawDebugGUI();
-
-			//エネミーマネージャー
-			EnemyManager& enemyManager = EnemyManager::Instance();
-			enemyManager.Instance().DrawDebugGUI();
-
-			stage->DrawDebugGUI();
-
-			//シャドウマップレンダラー
-			shadowmapRenderer->DrawDebugGUI();
 
 		}
 		ImGui::End();
@@ -274,7 +203,7 @@ void SceneGame::Render()
 
 	////3Dモデル描画
 	//{
-	//	ModelShader* shader = graphics.GetModelShader();
+	//	Shader* shader = graphics.GetShader();
 	//	shader->Begin(dc, rc);
 
 	//	//ステージ描画

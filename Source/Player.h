@@ -3,7 +3,6 @@
 #include "Graphics/shader.h"
 #include "Graphics/Model.h"
 #include "Character.h"
-#include "ProjectileManager.h"
 #include "Effect.h"
 
 //プレイヤー
@@ -22,8 +21,6 @@ public: //関数
     //プレイヤーとエネミーとの衝突処理
     void CollisionPlayerVsEnemies();
 
-    //弾丸と敵の衝突処理
-    void CollisionProjectileVsEnemies();
 
     //プレイヤーとstageの当たり判定
     void CollisionStage(DirectX::XMFLOAT3);
@@ -53,8 +50,6 @@ private:    //関数
     //移動入力処理
     void InputMove(float elapsedTime);
 
-    //弾丸入力処理
-    void InputProjectile();
 
     ////旋回処理
     //void Turn(float elapsedTime, float vx, float vz, float speed);
@@ -77,7 +72,6 @@ private:    //変数
     int JumpCount = 0;
     int JumpLimit = 2;
 
-    ProjectileManager projectileManager;
 
     //ImGui
     bool VisibleDebugPrimitive = true;

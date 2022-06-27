@@ -48,11 +48,12 @@ StageMain::StageMain()
 
     //ステージモデルを読み込み
     //model = new Model("Data/Model/ExampleStage/ExampleStage.mdl");
-    //model = new Model("Data/Model/Jammo/Jammo.mdl");
-    model = new Model("Data/Model/blockMap1/map1.mdl");
+    //model = new Model("Data/Model/blockMap1/map1.mdl");
+    model = new Model("Data/Model/blockMap1/map2/map2.mdl");
     //model = new Model("Data/Model/blockMap/blockMap.mdl");
     
-    model->nodeSearch("Button_Platform_01_Red", map);   //mapにノードを入れる(char型の引数使わない)
+    model->nodeSearch("map2", map,&mapBottom);   //mapにノードを入れる(mapのおやを入れる)
+    map[1][2][6] = {};
 }
 
 StageMain::~StageMain()
@@ -75,7 +76,6 @@ void StageMain::UpdateTransform()
     DirectX::XMStoreFloat4x4(&transform, W);
 }
 
-
 #include "Input/Input.h"
 //更新処理
 void StageMain::Update(float elapsedTime)
@@ -84,11 +84,65 @@ void StageMain::Update(float elapsedTime)
 
     if (gamePad.GetButtonDown() & GamePad::BTN_A)
     {   //かりうごかし
-        map[0][0][0].translate.x += 1;
-        model->GetNodes()[map[0][0][0].Index]= map[0][0][0];
+        map[1][4][6].translate.z += 1;
     }
 
+    if (!map[1][4][6].name)
+    {
+        return;
+    }
+    //仮落とし
+    if (bottomSearch())
+    {
+        map[1][4][6].translate.y -= 1;
+        int mx = map[1][4][6].translate.x + mapLeft;
+        int mz = map[1][4][6].translate.z - mapForward;
+        int my = map[1][4][6].translate.y; 
+
+        if (my == 0)
+        {
+            map[my][-mz][mx] = map[1][4][6];
+            map[1][4][6] = {};
+                model->GetNodes()[map[my][-mz][mx].Index] = map[my][-mz][mx];
+                model->UpdateTransform(transform);
+
+
+        }
+    }
+    if (!map[1][4][6].name)
+    {
+        return;
+    }
+
+    model->GetNodes()[map[1][4][6].Index] = map[1][4][6];
+
     model->UpdateTransform(transform);
+
+}
+
+bool StageMain::bottomSearch()
+{
+    int mx = map[1][4][6].translate.x+mapLeft;
+    int mz = map[1][4][6].translate.z-mapForward;
+    int my = map[1][4][6].translate.y - 1;  //一つ下を指定
+    //マップ-yを探す
+    if (my >= 0) {
+        if (map[my][-mz][mx].name)return false;
+    }
+
+
+    mx = map[1][4][6].translate.x;
+    mz = map[1][4][6].translate.z;
+
+    for (Model::Node mapB : mapBottom)  //マップy0より下をさがす
+    {
+        if (mapB.translate.y != my)continue;    //一つ下を探す
+        if (mapB.translate.x == mx && mapB.translate.z == mz)
+        {
+            return false;
+        }
+    }
+    return true;    //何もない場合
 }
 
 //レイキャスト
