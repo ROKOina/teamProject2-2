@@ -1,3 +1,0 @@
-﻿  failed to open file: C:\Users\2210080\Documents\teamProject2-2\HLSL\DebugPS.hlsl
-  compilation failed; no code produced
-C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(1671,5): error MSB6006: "fxc.exe" はコード 1 を伴って終了しました。
