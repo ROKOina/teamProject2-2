@@ -10,6 +10,7 @@ struct HitResult
     DirectX::XMFLOAT3 normal = { 0,0,0 };   //衝突したポリゴンの法線ベクトル
     float distance = 0.0f;  //レイの始点から交点までの距離
     int materialIndex = -1; //衝突したポリゴンのマテリアル番号
+    Model::Node hitNode = {};
 };
 
 //コリジョン

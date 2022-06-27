@@ -25,7 +25,13 @@ public:
     //更新処理
     void Update(float elapsedTime);
 
-    bool bottomSearch();
+    void MoveBlock(Model::Node* block, DirectX::XMFLOAT3 move);   //ブロック動かす
+
+
+    void BlockDropJudge(Model::Node* map);  //下にブロックが無い場合落とす
+
+    Model::Node* SearchMap(int index);   //Indexからnodeを探す
+
 
     //描画処理
     void Render(ID3D11DeviceContext* dc, Shader* shader);
@@ -38,9 +44,15 @@ public:
     //インスタンス取得
     static StageMain& Instance();
 
+private:
+    bool bottomSearch(Model::Node* map);    //下ブロックにブロックが無い場合true
+    void GravityBlock(Model::Node* mapB);   //落ちたブロックの下にブロックがあれば代入する
+
+public:
     //Y,Z,Xなので注意！！！！！！！
     Model::Node map[MAP_Y][MAP_Z][MAP_X] = {};
     vector<Model::Node> mapBottom;
+
 private:
     //vector<vector<Model::Node>> map[MAP_X][MAP_Y]; //マップチップ情報入れ物
     

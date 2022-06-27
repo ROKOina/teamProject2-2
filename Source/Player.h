@@ -78,4 +78,7 @@ private:    //変数
 
     //エフェクト
     Effect* hitEffect = nullptr;
+
+    //オブジェクト移動判定用
+    DirectX::XMFLOAT3 objJudgeEnd;
 };
