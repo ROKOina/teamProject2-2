@@ -17,7 +17,7 @@ StageMain& StageMain::Instance()
 {
     return *instance;
 }
-<<<<<<< HEAD
+
 void Stage::DrawDebugGUI()
 {
     const ModelResource* resource = model->GetResource();
@@ -40,9 +40,7 @@ void Stage::DrawDebugGUI()
    
 }
 Model::Node Barel;
-=======
 
->>>>>>> fa4844d34a4503e60429423f1bc472f37f648221
 //コンストラクタ
 StageMain::StageMain()
 {
@@ -101,11 +99,7 @@ bool StageMain::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3&
 
 
 //描画処理
-<<<<<<< HEAD
 void Stage::Render(ID3D11DeviceContext* dc,RenderContext rc, ModelShader* shader)
-=======
-void StageMain::Render(ID3D11DeviceContext* dc, Shader* shader)
->>>>>>> fa4844d34a4503e60429423f1bc472f37f648221
 {
     //シェーダーにモデルを描画してもらう
     shader->Draw(dc, rc, model);

@@ -33,17 +33,16 @@ public:
     //インスタンス取得
     static StageMain& Instance();
 
-<<<<<<< HEAD
     //モデルゲッター
     Model* GetModel()const { return model; }
 
     //ImGuiデバッグ表示
     void DrawDebugGUI();
 
-=======
     //Y,Z,Xなので注意！！！！！！！
     Model::Node map[MAP_Y][MAP_Z][MAP_X] = {};
->>>>>>> fa4844d34a4503e60429423f1bc472f37f648221
+
+
 private:
     //vector<vector<Model::Node>> map[MAP_X][MAP_Y]; //マップチップ情報入れ物
     
