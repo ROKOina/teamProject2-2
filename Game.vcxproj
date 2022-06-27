@@ -204,10 +204,7 @@
     <ClCompile Include="Source\SceneGame.cpp" />
     <ClCompile Include="Source\SceneLoading.cpp" />
     <ClCompile Include="Source\SceneManager.cpp" />
-<<<<<<< HEAD
-=======
     <ClCompile Include="Source\SceneTitle.cpp" />
->>>>>>> fa4844d34a4503e60429423f1bc472f37f648221
     <ClCompile Include="Source\StageMain.cpp" />
   </ItemGroup>
   <ItemGroup>
