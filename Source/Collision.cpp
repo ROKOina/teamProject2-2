@@ -267,6 +267,7 @@ bool Collision::IntersectRayVsModel(
                 HitPosition = P;
                 HitNormal = N;
                 materialIndex = subset.materialIndex;
+                result.hitNode = node;
 
             }
         }

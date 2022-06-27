@@ -244,10 +244,12 @@ void Character::UpdateVertialMove(float elapsedTime)
 //…•½ˆÚ“®XVˆ—
 void Character::UpdateHorizontalMove(float elapsedTime)
 {
+   
     //ˆÚ“®ˆ—
     position.x += velocity.x * elapsedTime;
     position.z += velocity.z * elapsedTime;
-   
+
+
     ////…•½‘¬—Í—ÊŒvŽZ
     //float velocityLengthXZ = fabsf(velocity.x) + fabsf(velocity.z);
     //if (velocityLengthXZ > 0.0f)

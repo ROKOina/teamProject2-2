@@ -87,6 +87,44 @@ void Player::Update(float elapsedTime)
 {
     DirectX::XMFLOAT3 oldPlayerPos = this->GetPosition();
 
+    //オブジェクト移動
+    DirectX::XMFLOAT3 s = this->position;
+    s.y += 0.5f;
+    objJudgeEnd = s;
+
+    //自身の回転値から前方向を決める
+    float frontX = sinf(angle.y);
+    float frontZ = cosf(angle.y);
+
+    objJudgeEnd.x += frontX;
+    objJudgeEnd.z += frontZ;
+    HitResult hit;
+    if (StageMain::Instance().RayCast(s, objJudgeEnd, hit))
+    {
+        GamePad& gamePad = Input::Instance().GetGamePad();
+
+        if (gamePad.GetButton() & GamePad::BTN_SPACE)   //space長押し
+        {   
+            //方向により動かせる方向変える
+            DirectX::XMFLOAT3 move = {};
+            if (gamePad.GetButtonDown() & GamePad::BTN_W)move.z = 1;
+            else if (gamePad.GetButtonDown() & GamePad::BTN_A)move.x = -1;
+            else if (gamePad.GetButtonDown() & GamePad::BTN_S)move.z = -1;
+            else if (gamePad.GetButtonDown() & GamePad::BTN_D)move.x = 1;
+            
+            if (move.x != 0 || move.z != 0)
+            {
+                //かりうごかし
+                StageMain::Instance().MoveBlock(&hit.hitNode,move);
+                position = { position.x + move.x,position.y + move.y,position.z + move.z };
+            }
+            
+            return;
+        }
+
+    }
+
+
     //移動入力処理
     InputMove(elapsedTime);
 
@@ -110,6 +148,7 @@ void Player::Update(float elapsedTime)
 
     //プレイヤーとstageの当たり判定
     CollisionStage(oldPlayerPos);
+
 
     //オブジェクトの行列を更新
     UpdateTransform();
@@ -326,7 +365,7 @@ void Player::DrawDebugPrimitive()
     //debugRenderer->DrawSphere(position, radius, DirectX::XMFLOAT4(0, 0, 0, 1));  
     //衝突判定用のデバッグ円柱を描画
     debugRenderer->DrawCylinder(position, radius, height, DirectX::XMFLOAT4(0, 0, 0, 1));  
-    
+    debugRenderer->DrawSphere(objJudgeEnd, 0.2f, { 1,0,0,1 });
 }
 
 //デバッグ用GUI描画
