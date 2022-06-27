@@ -10,11 +10,46 @@
 // 初期化
 void SceneGame::Initialize()
 {
+	Graphics& graphics = Graphics::Instance();
 
+	//各種レンダラー生成
+	{
+		UINT width = static_cast<UINT>(graphics.GetScreenWidth());
+		UINT height = static_cast<UINT>(graphics.GetScreenHeight());
+
+		//シャドウマップレンダラー
+		shadowmapRenderer = std::make_unique<ShadowMapRenderer>(2048);
+		//シーンレンダラー
+		sceneRenderer = std::make_unique<SceneRenderer>(width,height);
+	}
 	//ステージ初期化
 	stage = new StageMain();
 	//プレイヤー初期化
 	player = new Player();
+
+	//モデルをレンダラーに登録
+	Model* list[] =
+	{
+		stage->GetModel(),
+		player->GetModel(),
+		
+	};
+	for(Model* model:list)
+	{
+		if (!model)
+			continue;
+		shadowmapRenderer->RegisterRenderModel(model);
+		sceneRenderer->RegisterRenderModel(model);
+	}
+	//平行光源を追加
+	{
+		Light* light = new Light(LightType::Directional);
+		light->SetDirection({ 0, -1, 1 });
+		LightManager::Instance().Register(light);
+
+		//シャドウマップ用の光源として指定する
+		LightManager::Instance().SetShadowmapLight(light);
+	}
 	//カメラコントローラー初期化
 	cameraController = new CameraController();
 
@@ -34,10 +69,10 @@ void SceneGame::Initialize()
 	}
 
 	//カメラ初期設定
-	Graphics& graphics = Graphics::Instance();
+	
 	Camera& camera = Camera::Instance();
 	camera.SetLookAt(
-		DirectX::XMFLOAT3(0, 10, -10),
+		DirectX::XMFLOAT3(2, 2, -10),
 		DirectX::XMFLOAT3(0, 0, 0),
 		DirectX::XMFLOAT3(0, 1, 0)
 	);
@@ -118,7 +153,7 @@ void SceneGame::Render()
 
 	// 描画処理
 	RenderContext rc;	//描画するために必要な構造体
-	rc.lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f };	// ライト方向（下方向）
+	rc.directionalLightData.direction = { 0.0f, -1.0f, 0.0f, 0.0f };	// ライト方向（下方向）
 
 	//カメラパラメーター設定
 	Camera& camera = Camera::Instance();
@@ -149,17 +184,25 @@ void SceneGame::Render()
 
 	// 3Dモデル描画
 	{
-		Shader* shader = graphics.GetShader();
-		shader->Begin(dc,rc);	//シェーダーにカメラの情報を渡す
+		//シャドウマップの描画
+		shadowmapRenderer->Render(dc);
 
-		//ステージ描画
-		stage->Render(dc, shader);
-		//プレイヤー描画
-		player->Render(dc, shader);
-		//エネミー描画
-		EnemyManager::Instance().Render(dc, shader);
+		//シーンレンダラーにシャドウマップ情報を渡す
+		sceneRenderer->SetShadowmapData(shadowmapRenderer->GetShadowMapData());
+		//シーンの描画
+		sceneRenderer->Render(dc);
+		//ModelShader* shader = graphics.GetModelShader(ModelShaderId::Default);
+		//shader->Begin(dc,rc);	//シェーダーにカメラの情報を渡す
 
-		shader->End(dc);
+		////ステージ描画
+		//stage->Render(dc,rc, shader);
+		////プレイヤー描画
+		//player->Render(dc,rc, shader);
+		////エネミー描画
+		//EnemyManager::Instance().Render(dc, shader);
+
+		//shader->End(dc,rc);
+
 	}
 
 	//3Dエフェクト描画
@@ -212,9 +255,17 @@ void SceneGame::Render()
 			//カメラコントローラー
 			cameraController->DrawDebugGUI();
 
+			//ライトマネージャー
+			LightManager::Instance().DrawDebugGUI();
+
 			//エネミーマネージャー
 			EnemyManager& enemyManager = EnemyManager::Instance();
 			enemyManager.Instance().DrawDebugGUI();
+
+			stage->DrawDebugGUI();
+
+			//シャドウマップレンダラー
+			shadowmapRenderer->DrawDebugGUI();
 
 		}
 		ImGui::End();
@@ -223,7 +274,7 @@ void SceneGame::Render()
 
 	////3Dモデル描画
 	//{
-	//	Shader* shader = graphics.GetShader();
+	//	ModelShader* shader = graphics.GetModelShader();
 	//	shader->Begin(dc, rc);
 
 	//	//ステージ描画

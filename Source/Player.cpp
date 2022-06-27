@@ -12,7 +12,7 @@
 //コンストラクタ
 Player::Player()
 {
-    model = new Model("Data/Model/Mr.Incredible/Mr.Incredible.mdl");
+    model = new Model("Data/Model/Jammo/Jammo.mdl");
 
     //モデルが大きいのでスケーリング
     scale.x = scale.y = scale.z = 0.01f;
@@ -427,10 +427,9 @@ void Player::CollisionStage(DirectX::XMFLOAT3 oldPlayerPos)
 }
 
 //描画更新
-void Player::Render(ID3D11DeviceContext* dc, Shader* shader)
+void Player::Render(ID3D11DeviceContext* dc,RenderContext rc, ModelShader* shader)
 {
-    shader->Draw(dc, model);
-
+    shader->Draw(dc, rc, model);
     //弾丸描画処理
     projectileManager.Render(dc, shader);
 }
@@ -453,6 +452,9 @@ void Player::DrawDebugPrimitive()
 //デバッグ用GUI描画
 void Player::DrawDebugGUI()
 {
+    const ModelResource* resource = model->GetResource();
+    const std::vector<Model::Node>& nodes = model->GetNodes();
+
     //ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_FirstUseEver);
     //ImGui::SetNextWindowSize(ImVec2(300, 300), ImGuiCond_FirstUseEver);
 
@@ -482,6 +484,19 @@ void Player::DrawDebugGUI()
             ImGui::InputFloat("Friction", &friction);
             ImGui::InputFloat("Acceleration", &acceleration);
             ImGui::InputFloat("AirControl", &airControl);
+            if (ImGui::TreeNode("Material"))
+            {
+                for (const ModelResource::Mesh& mesh : resource->GetMeshes())
+                {
+                    for (const ModelResource::Subset& subset : mesh.subsets)
+                    {
+                        ImGui::SliderFloat("smooth", &subset.material->pbr.adjustSmoothness, -1.0f, 1.0f);
+                        ImGui::SliderFloat("Metalic", &subset.material->pbr.adjustMetalness, -1.0f, 1.0f);
+                    }
+                }
+                ImGui::TreePop();
+            }
+        
     }
     //ImGui::End();
 }

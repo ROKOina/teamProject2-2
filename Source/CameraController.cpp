@@ -12,43 +12,43 @@ void CameraController::Update(float elapsedTime)
     //カメラの回転速度
     float speed = rollSpeed * elapsedTime;
 
-    ////スティックの入力値を合わせてX軸とY軸を回転
-    //if (ay > 0)
-    //{
-    //    angle.x += speed;
-    //}
-    //if (ay < 0)
-    //{
-    //    angle.x -= speed;
-    //}
-    //if (ax > 0)
-    //{
-    //    angle.y += speed;
-    //}
-    //if (ax < 0)
-    //{
-    //    angle.y -= speed;
-    //}
+    //スティックの入力値を合わせてX軸とY軸を回転
+    if (ay > 0)
+    {
+        angle.x += speed;
+    }
+    if (ay < 0)
+    {
+        angle.x -= speed;
+    }
+    if (ax > 0)
+    {
+        angle.y += speed;
+    }
+    if (ax < 0)
+    {
+        angle.y -= speed;
+    }
 
-    ////X軸のカメラ回転を制限
-    //if (angle.x > maxAngleX)
-    //{
-    //    angle.x = maxAngleX;
-    //}
-    //if (angle.x < minAngleX)
-    //{
-    //    angle.x = minAngleX;
-    //}
+    //X軸のカメラ回転を制限
+    if (angle.x > maxAngleX)
+    {
+        angle.x = maxAngleX;
+    }
+    if (angle.x < minAngleX)
+    {
+        angle.x = minAngleX;
+    }
 
-    ////Y軸のカメラ回転値を-3.14～3.14に収まるようにする
-    //if (angle.y < -DirectX::XM_PI)
-    //{
-    //    angle.y += DirectX::XM_2PI;
-    //}
-    //if (angle.y > DirectX::XM_PI)
-    //{
-    //    angle.y -= DirectX::XM_2PI;
-    //}
+    //Y軸のカメラ回転値を-3.14～3.14に収まるようにする
+    if (angle.y < -DirectX::XM_PI)
+    {
+        angle.y += DirectX::XM_2PI;
+    }
+    if (angle.y > DirectX::XM_PI)
+    {
+        angle.y -= DirectX::XM_2PI;
+    }
 
     //カメラ回転値を回転行列に変換
     DirectX::XMMATRIX Transform = DirectX::XMMatrixRotationRollPitchYaw(angle.x, angle.y, angle.z);
