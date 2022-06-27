@@ -42,7 +42,7 @@ void ProjectileManager::Update(float elapsedTime)
 }
 
 //•`‰æˆ—
-void ProjectileManager::Render(ID3D11DeviceContext* dc, Shader* shader)
+void ProjectileManager::Render(ID3D11DeviceContext* dc, ModelShader* shader)
 {
     for (Projectile* projectile : projectiles)
     {

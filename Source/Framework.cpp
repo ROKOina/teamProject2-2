@@ -7,6 +7,8 @@
 #include "EffectManager.h"
 //#include "SceneGame.h"
 #include "SceneTitle.h"
+#include "SceneGame.h"
+#include "SceneLoading.h"
 #include "SceneManager.h"
 
 //static SceneGame sceneGame;
@@ -24,7 +26,7 @@ Framework::Framework(HWND hWnd)
 	EffectManager::Instance().Initialize();
 
 	//sceneGame.Initialize();
-	SceneManager::Instance().ChangeScene(new ScneTitle);
+	SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 }
 
 // デストラクタ

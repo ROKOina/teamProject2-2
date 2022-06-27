@@ -15,7 +15,7 @@ public:
     void Update(float elapsedTime);
 
     //描画処理
-    void Render(ID3D11DeviceContext* dc, Shader* shader);
+    void Render(ID3D11DeviceContext* dc, ModelShader* shader);
 
     //デバッグプリミティブ描画
     void DrawDebugPrimitive();

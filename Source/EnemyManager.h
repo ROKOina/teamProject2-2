@@ -26,7 +26,7 @@ public:
     void Upadate(float elapsedTime);
 
     //•`‰æˆ—
-    void Render(ID3D11DeviceContext* dc, Shader* shader);
+    void Render(ID3D11DeviceContext* dc, ModelShader* shader);
 
     void DrawDebugPrimitive();
 

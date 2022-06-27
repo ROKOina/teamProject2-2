@@ -14,7 +14,7 @@ public:
     void Update(float elapsedTime)override;
 
     //•`‰æˆ—
-    void Render(ID3D11DeviceContext* dc, Shader* shader)override;
+    void Render(ID3D11DeviceContext* dc, ModelShader* shader)override;
 
     void GuiEnemy()override;
 

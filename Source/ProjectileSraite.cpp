@@ -43,9 +43,10 @@ void ProjectileStraite::Update(float elapsedTime)
 }
 
 //•`‰æˆ—
-void ProjectileStraite::Render(ID3D11DeviceContext* dc, Shader* shader)
+void ProjectileStraite::Render(ID3D11DeviceContext* dc, ModelShader* shader)
 {
-    shader->Draw(dc, model);
+    RenderContext rc = {};
+    shader->Draw(dc, rc, model);
 }
 
 //”­ŽË

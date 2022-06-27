@@ -2,17 +2,17 @@
 
 #include <memory>
 #include <wrl.h>
-#include "Graphics/Shader.h"
+#include "Graphics/shader.h"
 
-class LambertShader : public Shader
+class LambertShader : public ModelShader
 {
 public:
 	LambertShader(ID3D11Device* device);
 	~LambertShader() override {}
 
 	void Begin(ID3D11DeviceContext* dc, const RenderContext& rc) override;
-	void Draw(ID3D11DeviceContext* dc, const Model* model) override;
-	void End(ID3D11DeviceContext* dc) override;
+	void Draw(ID3D11DeviceContext* dc,RenderContext& rc, const Model* model) override;
+	void End(ID3D11DeviceContext* context, const RenderContext& rc) override;
 
 private:
 	static const int MaxBones = 128;

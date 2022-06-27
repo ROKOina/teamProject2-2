@@ -191,12 +191,12 @@ void LambertShader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 	DirectX::XMMATRIX P = DirectX::XMLoadFloat4x4(&rc.projection);
 	DirectX::XMStoreFloat4x4(&cbScene.viewProjection, V * P);
 
-	cbScene.lightDirection = rc.lightDirection;
+	cbScene.lightDirection = rc.directionalLightData.direction;
 	dc->UpdateSubresource(sceneConstantBuffer.Get(), 0, 0, &cbScene, 0, 0);
 }
 
 // •`‰æ
-void LambertShader::Draw(ID3D11DeviceContext* dc, const Model* model)
+void LambertShader::Draw(ID3D11DeviceContext* dc,RenderContext& rc, const Model* model)
 {
 	const ModelResource* resource = model->GetResource();
 	const std::vector<Model::Node>& nodes = model->GetNodes();
@@ -233,7 +233,7 @@ void LambertShader::Draw(ID3D11DeviceContext* dc, const Model* model)
 			CbSubset cbSubset;
 			cbSubset.materialColor = subset.material->color;
 			dc->UpdateSubresource(subsetConstantBuffer.Get(), 0, 0, &cbSubset, 0, 0);
-			dc->PSSetShaderResources(0, 1, subset.material->shaderResourceView.GetAddressOf());
+			dc->PSSetShaderResources(0, 1, subset.material->diffuse_map.GetAddressOf());
 			dc->PSSetSamplers(0, 1, samplerState.GetAddressOf());
 			dc->DrawIndexed(subset.indexCount, subset.startIndex, 0);
 		}
@@ -242,7 +242,7 @@ void LambertShader::Draw(ID3D11DeviceContext* dc, const Model* model)
 }
 
 // •`‰æI—¹
-void LambertShader::End(ID3D11DeviceContext* dc)
+void LambertShader::End(ID3D11DeviceContext* dc,const RenderContext& rc)
 {
 	dc->VSSetShader(nullptr, nullptr, 0);
 	dc->PSSetShader(nullptr, nullptr, 0);

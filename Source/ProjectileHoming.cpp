@@ -98,9 +98,10 @@ void ProjectileHoming::Update(float elapsedTime)
 }
 
 //•`‰æˆ—
-void ProjectileHoming::Render(ID3D11DeviceContext* dc, Shader* shader)
+void ProjectileHoming::Render(ID3D11DeviceContext* dc, ModelShader* shader)
 {
-    shader->Draw(dc, model);
+    RenderContext rc = {};
+    shader->Draw(dc, rc , model);
 }
 
 //”­ŽË
