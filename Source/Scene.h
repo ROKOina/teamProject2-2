@@ -1,5 +1,9 @@
 #pragma once
-
+#include "Graphics/DepthStencil.h"
+#include "Graphics/RenderContext.h"
+#include "Graphics/Light.h"
+#include "Graphics/LightManager.h"
+#include <memory>
 //ÉVÅ[Éì
 class Scene
 {
@@ -27,4 +31,8 @@ public:
 
 private:
     bool ready = false;
+
+    
+
+
 };

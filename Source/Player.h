@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Shader.h"
+#include "Graphics/shader.h"
 #include "Graphics/Model.h"
 #include "Character.h"
 #include "ProjectileManager.h"
@@ -17,7 +17,7 @@ public: //関数
     void Update(float elapsedTime);
 
     //描画処理
-    void Render(ID3D11DeviceContext* dc, Shader* shader);
+    void Render(ID3D11DeviceContext* dc,RenderContext rc, ModelShader* shader);
 
     //プレイヤーとエネミーとの衝突処理
     void CollisionPlayerVsEnemies();
@@ -40,6 +40,9 @@ public: //関数
     //ジャンプ入力処理
     void InputJump();
 
+    //モデルゲッター
+    Model* GetModel()const { return model; }
+
 private:    //関数
     //スティック入力値から移動ベクトルを取得
     DirectX::XMFLOAT3 GetMoveVec() const;
@@ -53,6 +56,7 @@ private:    //関数
     ////旋回処理
     //void Turn(float elapsedTime, float vx, float vz, float speed);
 
+    
 protected:
     //着地した時に呼ばれる
     void OnLanding()override;

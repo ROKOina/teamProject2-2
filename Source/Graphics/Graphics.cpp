@@ -1,5 +1,7 @@
 #include "Misc.h"
 #include "Graphics/LambertShader.h"
+#include "Graphics/PBRShader.h"
+#include "Graphics/ShadowmapCasterShader.h"
 #include "Graphics/Graphics.h"
 
 Graphics* Graphics::instance = nullptr;
@@ -128,9 +130,16 @@ Graphics::Graphics(HWND hWnd)
 		immediateContext->RSSetViewports(1, &viewport);
 	}
 
-	// シェーダー
+	// モデルシェーダー
 	{
-		shader = std::make_unique<LambertShader>(device.Get());
+		modelShader[static_cast<int>(ModelShaderId::Default)] = std::make_unique<LambertShader>(device.Get());
+		modelShader[static_cast<int>(ModelShaderId::PBR)] = std::make_unique<PBRShader>(device.Get());
+		modelShader[static_cast<int>(ModelShaderId::ShadowmapCaster)] = std::make_unique<ShadowmapCasterShader>(device.Get());
+	}
+
+	//スプライトシェーダー
+	{
+		
 	}
 
 	// レンダラ

@@ -10,6 +10,19 @@
 
 #include <mutex>
 
+enum class ModelShaderId
+{
+	Default,
+	PBR,
+	ShadowmapCaster,
+	Max,
+};
+
+enum class SpriteShaderId
+{
+	Default,
+	Max,
+};
 // グラフィックス
 class Graphics
 {
@@ -35,8 +48,11 @@ public:
 	// デプスステンシルビュー取得
 	ID3D11DepthStencilView* GetDepthStencilView() const { return depthStencilView.Get(); }
 
-	// シェーダー取得
-	Shader* GetShader() const { return shader.get(); }
+	// モデルシェーダー取得
+	ModelShader* GetModelShader(ModelShaderId id) const { return modelShader[static_cast<int>(id)].get(); }
+
+	//スプライトシェーダー
+	SpriteShader* GetSpriteShader(SpriteShaderId id)const { return spriteShader[static_cast<int>(id)].get(); }
 
 	// スクリーン幅取得
 	float GetScreenWidth() const { return screenWidth; }
@@ -66,7 +82,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Texture2D>			depthStencilBuffer;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	depthStencilView;
 
-	std::unique_ptr<Shader>							shader;
+	std::unique_ptr<ModelShader>					modelShader[static_cast<int>(ModelShaderId::Max)];
+	std::unique_ptr<SpriteShader>					spriteShader[static_cast<int>(SpriteShaderId::Max)];
 	std::unique_ptr<DebugRenderer>					debugRenderer;
 	std::unique_ptr<LineRenderer>					lineRenderer;
 	std::unique_ptr<ImGuiRenderer>					imguiRenderer;

@@ -1,5 +1,8 @@
 #include "StageMain.h"
 
+#include "Camera.h"
+#include "imgui.h"
+
 static Stage* instance = nullptr;
 
 DirectX::XMFLOAT4X4 transform = {
@@ -14,6 +17,27 @@ DirectX::XMFLOAT4X4 transform = {
 Stage& Stage::Instance()
 {
     return *instance;
+}
+void Stage::DrawDebugGUI()
+{
+    const ModelResource* resource = model->GetResource();
+    const std::vector<Model::Node>& nodes = model->GetNodes();
+    if (ImGui::CollapsingHeader("Stage", ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        if (ImGui::TreeNode("Material"))
+        {
+            for (const ModelResource::Mesh& mesh : resource->GetMeshes())
+            {
+                for (const ModelResource::Subset& subset : mesh.subsets)
+                {
+                    ImGui::SliderFloat("smooth", &subset.material->pbr.adjustSmoothness, -1.0f, 1.0f);
+                    ImGui::SliderFloat("Metalic", &subset.material->pbr.adjustMetalness, -1.0f, 1.0f);
+                }
+            }
+            ImGui::TreePop();
+        }
+    }
+   
 }
 Model::Node Barel;
 //コンストラクタ
@@ -66,8 +90,8 @@ bool Stage::RayCast(const DirectX::XMFLOAT3& start, const DirectX::XMFLOAT3& end
 
 
 //描画処理
-void Stage::Render(ID3D11DeviceContext* dc, Shader* shader)
+void Stage::Render(ID3D11DeviceContext* dc,RenderContext rc, ModelShader* shader)
 {
     //シェーダーにモデルを描画してもらう
-    shader->Draw(dc, model);
+    shader->Draw(dc, rc, model);
 }

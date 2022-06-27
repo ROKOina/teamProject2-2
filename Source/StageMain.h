@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics/Shader.h"
+#include "Graphics/shader.h"
 #include "Graphics/Model.h"
 #include "Collision.h"
 
@@ -15,7 +15,7 @@ public:
     void Update(float elapsedTime);
 
     //描画処理
-    void Render(ID3D11DeviceContext* dc, Shader* shader);
+    void Render(ID3D11DeviceContext* dc, RenderContext rc,ModelShader* shader);
 
     void UpdateTransform();
 
@@ -24,6 +24,12 @@ public:
 
     //インスタンス取得
     static Stage& Instance();
+
+    //モデルゲッター
+    Model* GetModel()const { return model; }
+
+    //ImGuiデバッグ表示
+    void DrawDebugGUI();
 
 private:
     Model* model = nullptr;

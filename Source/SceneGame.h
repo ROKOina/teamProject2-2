@@ -6,6 +6,9 @@
 #include "Scene.h"
 #include "Graphics\Sprite.h"
 
+#include "Renderer/ShadowMapRenderer.h"
+#include "Renderer/SceneRenderer.h"
+
 // ゲームシーン
 class SceneGame :public Scene
 {
@@ -38,4 +41,9 @@ private:
 	Player* player = nullptr;
 	CameraController* cameraController = nullptr;
 	Sprite* gauge = nullptr;
+
+	//レンダラー
+	std::unique_ptr<ShadowMapRenderer>   shadowmapRenderer;
+	std::unique_ptr<SceneRenderer>       sceneRenderer;
+
 };
