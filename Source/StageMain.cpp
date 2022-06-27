@@ -25,7 +25,9 @@ StageMain::StageMain()
     //model = new Model("Data/Model/blockMap1/map1.mdl");
     model = new Model("Data/Model/blockMap1/map2/map2.mdl");
     //model = new Model("Data/Model/blockMap/blockMap.mdl");
-    
+
+    int a = 0;
+
     model->nodeSearch("map2", map,&mapBottom);   //map‚Éƒm[ƒh‚ğ“ü‚ê‚é(map‚Ì‚¨‚â‚ğ“ü‚ê‚é)
     map[1][2][6] = {};  //‰¼‚Åitem‚ğÁ‚·
 }
